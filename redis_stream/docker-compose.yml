@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  redis:
+    image: redisuniversity/ru202-lab
+    ports:
+      - "8888:8888"
+    container_name: redis_lab
