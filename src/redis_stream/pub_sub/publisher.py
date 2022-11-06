@@ -1,20 +1,33 @@
+import json
 import random
 import time
-import json
 
-from src.config.client import get_redis_connection
+from dao.core.dao_redis import RedisDaoBase
 
 
-def main():
-    client = get_redis_connection()
+class RedisPublisher(RedisDaoBase):
+
+    def __init__(self, channel='redis-channel'):
+        super().__init__()
+        self.channel = channel
+
+    def publish(self, **kwargs):
+        pipeline = kwargs.get('pipeline', self.redis)
+        channel = kwargs.get('channel', self.channel)
+        is_published = pipeline.publish(channel=channel, message=json.dumps(kwargs['message']))
+        return bool(is_published)
+
+
+def main():  # pragma: no cover
+    publisher = RedisPublisher()
     channel = 'redis-channel'
     for idx in range(100):
-        secs = random.uniform(0.1, 1.0)
+        secs = random.uniform(0.1, 2.0)
         time.sleep(secs)
         message = {'data': f'value_{idx}'}
-        client.publish(channel=channel, message=json.dumps(message))
+        publisher.publish(channel=channel, message=message)
         print(f'[{idx}] Message: {message} hase published')
 
 
 if __name__ == '__main__':
-    main()
+    main()   # pragma: no cover

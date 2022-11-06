@@ -1,4 +1,4 @@
-from settings.common import DEFAULT_KEY_PREFIX
+from config.common import DEFAULT_DAO_KEY_PREFIX
 
 
 def prefixed_key(f):
@@ -11,8 +11,11 @@ def prefixed_key(f):
 
 class KeySchema:
 
-    def __init__(self, prefix: str = DEFAULT_KEY_PREFIX):
+    def __init__(self, prefix: str = DEFAULT_DAO_KEY_PREFIX):
         self.prefix = prefix
+
+
+class UserKeySchema(KeySchema):
 
     @prefixed_key
     def user_hash_key(self, user_id):
