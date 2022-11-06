@@ -198,6 +198,78 @@ SUBSCRIBE channel [channel ...]
 ### Detail info about Consumers Groups
 ````text
 > XINFO GROUPS queue_name
+The output from XINFO GROUPS shows us which consumer groups are associated with the stream.
+ We have one group named primes, containing our three consumers instances:
+````
+
+````text
+> XINFO GROUPS numbers
+1) 1) "name"             
+   2) "primes"           
+   3) "consumers"        
+   4) (integer) 3        
+   5) "pending"          
+   6) (integer) 10       
+   7) "last-delivered-id"
+   8) "1667762643632-0" 
+````
+
+
+````text
+The XINFO CONSUMERS command's output shows us information about the status of each consumer in the group primes:
+````
+
+````text
+ XINFO CONSUMERS numbers primes
+1) 1) "name"        
+   2) "BOB-0"       
+   3) "pending"     
+   4) (integer) 3   
+   5) "idle"        
+   6) (integer) 1889
+2) 1) "name"        
+   2) "BOB-1"       
+   3) "pending"     
+   4) (integer) 1
+   5) "idle"
+   6) (integer) 773
+3) 1) "name"
+   2) "BOB-2"
+   3) "pending"
+   4) (integer) 4
+   5) "idle"
+   6) (integer) 393
+
+````
+### Memory usage
+````text
+> MEMORY USAGE numbers
+(integer) 67294
+````
+
+## XINFO
+```text
+The XINFO STREAM command shows information about the current state of the stream, including:
+
+The stream's overall length
+Information about the underlying radix tree implementation
+The number of consumer groups associated with the screen (we have 1, the primes group)
+The last (highest) ID in the stream
+The first and last entries in the stream
+````
+
+````text
+> XINFO STREAM numbers
+ 1) "length"            
+ 2) (integer) 368       
+ 3) "radix-tree-keys"   
+ 4) (integer) 4         
+ 5) "radix-tree-nodes"  
+ 6) (integer) 10        
+ 7) "groups"            
+ 8) (integer) 1         
+ 9) "last-generated-id" 
+10) "1667762560044-0"  
 ````
 
 ### Read queue as a part of consumer group
@@ -229,3 +301,50 @@ Redis will consider all messages returned by XREADGROUP to be acknowledged.
 ````text
 > XREADGROUP group_name0 consumer_name0 NOACK COUNT 1 SREAMS stream_name > 
 ````
+
+## Basic Consumer Group Administration
+
+### XPENDING
+````text
+The XPENDING command is the interface to inspect the list of pending messages,
+ and is as thus a very important command in order to observe and understand what is happening with a streams consumer groups: what clients are active, 
+what messages are pending to be consumed, or to see if there are idle messages.
+````
+````text
+> XPENDING numbers primes
+1) (integer) 7
+2) "1667765887692-0"
+3) "1667765888112-0"
+4) 1) 1) "BOB-0"
+      2) "1"
+   2) 1) "BOB-2"
+      2) "1"
+   3) 1) "BOB-3"
+      2) "1"
+   4) 1) "BOB-5"
+      2) "1"
+   5) 1) "BOB-7"
+      2) "1"
+   6) 1) "BOB-8"
+      2) "1"
+   7) 1) "BOB-9"
+      2) "1"
+
+````
+
+
+### XCLAIM
+````text
+In the context of a stream consumer group, this command changes the ownership of a pending message,
+ so that the new owner is the consumer specified as the command argument. 
+````
+````text
+> XCLAIM mystream mygroup Alice 3600000 1526569498055-0
+1) 1) 1526569498055-0
+   2) 1) "message"
+      2) "orange"
+````
+
+###  XGROUP DELCONSUMER
+- Deletes a consumer from a group
+- Deletes the consumer's list of pending entries

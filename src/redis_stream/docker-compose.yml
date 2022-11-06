@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 services:
   redis:
     image: redisuniversity/ru202-lab
@@ -6,5 +6,11 @@ services:
       - "8888:8888"
       - "6379:6379"
     container_name: redis_lab
+    networks:
+      redis:
 
-# docker run -it --network redis-net --rm redis redis-cli -h redis-server
+networks:
+  redis:
+    name: stream
+
+# docker run -it --network stream --rm redis redis-cli -h redis_lab
