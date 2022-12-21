@@ -348,3 +348,80 @@ In the context of a stream consumer group, this command changes the ownership of
 ###  XGROUP DELCONSUMER
 - Deletes a consumer from a group
 - Deletes the consumer's list of pending entries
+
+### Managing Pending Messages
+- <a href="https://redis.io/commands/xpending/">XPENDING</a>
+- <a href="https://redis.io/commands/xclaim/">XCLAIM</a> 
+- <a href="https://redis.io/commands/xinfo/">XINFO</a>
+
+#### XCLAIM
+````text
+In the context of a stream consumer group, this command changes the ownership of a pending message, 
+so that the new owner is the consumer specified as the command argument. 
+````
+
+### Consumer Recovery & Poison-Pill Messages
+- Recovering from an Offline Consumer
+````text
+* Monitor pending messages using XPENDING
+* Determine which messages should be reassigned: 
+    By delivery count
+    By Elapsed time since last delivery
+    By Consumer idle time
+````
+
+### Poison-pill message
+It is a message that:
+ - A bad unprocessable message
+ - Might cause consumer to die
+ - Might be reprocessed indefinitely
+
+### Poison-pill recovery
+
+### Performance Considerations
+
+- Streams act like an append-only log but are implemented as <a href="https://en.wikipedia.org/wiki/Radix_tree">radix-trees</a>
+- O(1) guarantees performence for XREAD, XREADGROUP, XRANGE and XDEL
+- Do not count stream (this transfrom an 0(1) into O(N))
+
+ XADD command
+ XRANGE command
+ XREAD command
+ XREADGROUP command
+ XDEL command
+ 
+### Stream Memory Usage
+- With small data values, streams are much more memory-efficient
+- As the data values increased in size, the data structure overhead of sorted sets will be less pronounced
+- Best to generate sample data for your use case and test memory usage command
+
+
+Useful commands 
+- <a href="https://redis.io/commands/XADD/">XADD</a>
+- <a href="https://redis.io/commands/XTRIM/">XTRIM</a>
+- <a href="https://redis.io/commands/memory-usage/">MEMORY USAGE</a>
+
+Suppose you're trying to decide whether to use a Redis stream, sorted set, or list. Memory efficiency is the most important criterion. How do you decide which data structure to use?
+Generate realistic sample data, add the data to each data stucture, and then compare the data structures using the MEMORY USAGE command
+
+The use of a Radix Tree provides a space-optimized data structure for the stream. Redis Streams keys are particularly suited to such a structure as they are relatively small and have repeating elements in them due to the use of millisecond timestamps in the keys.
+
+Additionally, the storage overhead associated with message payload metadata is reduced by flagging a series of messages all with same field names, avoiding redundant storage of the field name strings.
+
+### Stream Capping Strategies
+Useful commands 
+- <a href="https://redis.io/commands/XADD/">XADD</a>
+- <a href="https://redis.io/commands/XTRIM/">XTRIM</a>
+- <a href="https://redis.io/commands/expire/">EXPIRE</a>
+- <a href="https://redis.io/commands/xlen/">XLEN</a>
+- <a href="https://redis.io/commands/xrange/">XRANGE</a>
+
+Strategies for control stream:
+- Trimming with XADD (XADD numbers MAXLEN ~ 1000 * n 144450) # use for best performance
+- Trimming with XTRIM (XTRIM numbers MAXLEN ~ 500) # for periodic usage (manual\automatic)
+- Time bassed Trimming (EXPIRE mykey 10 ) # message will be deleted after 10 seconds
+
+### Redis Streams Usage Patterns
+- Large message payloads
+- One stream vs multiple streams
+- Single consumer vs consumer groups
