@@ -1,6 +1,6 @@
-from redis_dao.core.dao_redis import RedisDaoBase
-from redis_dao.dao.dao_base import UserDaoBase
-from redis_dao.model.model import UserModel
+from dao.core.dao_redis import RedisDaoBase
+from dao.dao.dao_base import UserDaoBase
+from dao.model.model import UserModel
 
 
 class UserDaoRedis(UserDaoBase, RedisDaoBase):

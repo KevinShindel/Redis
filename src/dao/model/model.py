@@ -1,4 +1,3 @@
-import typing
 from dataclasses import dataclass, field, asdict
 
 from pydantic import PositiveInt
