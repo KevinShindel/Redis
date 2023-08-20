@@ -1,9 +1,5 @@
 # Redis docs
 
-## Redis Strings Commands
-````text
-# TODO: Add more commands
-````
 
 ## Redis Lists Commands
 
@@ -183,3 +179,25 @@ EXEC
 
 ### Inspect commands
 - `BITOP operation destkey key [key ...]` - Perform a bitwise operation between multiple keys (containing string values) and store the result in the destination key. The BITOP command supports four bitwise operations: AND, OR, XOR and NOT, thus the valid forms to call the command are: BITOP AND destkey srckey1 srckey2 srckey3 ... BITOP OR destkey srckey1 srckey2 srckey3 ... BITOP XOR destkey srckey1 srckey2 srckey3 ... BITOP NOT destkey srckey The result of the operation is always stored at destkey.
+
+
+## Geospatial commands
+
+### Set commands
+- `GEOADD key longitude latitude member [longitude latitude member ...]` - Add one or more geospatial items in the geospatial index represented using a sorted set.
+- `GEOHASH key member [member ...]` - Returns members of a geospatial index as standard geohash strings.
+- `GEOPOS key member [member ...]` - Returns longitude and latitude of members of a geospatial index.
+- `GEODIST key member1 member2 [unit]` - Returns the distance between two members of a geospatial index.
+- `GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
+- `GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member.
+
+### Get commands
+- `GEOHASH key member [member ...]` - Returns members of a geospatial index as standard geohash strings.
+- `GEOPOS key member [member ...]` - Returns longitude and latitude of members of a geospatial index.
+- `GEODIST key member1 member2 [unit]` - Returns the distance between two members of a geospatial index.
+- `GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
+
+### Inspect commands
+- `GEOSEARCH key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [WITHCOORDS] [WITHDISTANCES] [WITHHASHES] [WITHGEODIST] [STORE key] [STOREDIST key] [STOREHASH key] [STOREUNIT m|km|ft|mi]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
+- `GEOSEARCHSTORE key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [WITHCOORDS] [WITHDISTANCES] [WITHHASHES] [WITHGEODIST] [STORE key] [STOREDIST key] [STOREHASH key] [STOREUNIT m|km|ft|mi]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
+- `GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member.
