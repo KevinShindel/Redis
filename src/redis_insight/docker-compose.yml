@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+
+    redis:
+      image: redislabs/redismod
+      ports:
+        - 6379:6379
+      container_name: redis
+
+    redisinsight:
+      image: redislabs/redisinsight:latest
+      hostname: redisinsight
+      container_name: redisinsight
+      volumes:
+        - .:/db
+      ports:
+        - 8001:8001
+
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8001"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
