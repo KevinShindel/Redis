@@ -201,3 +201,46 @@ EXEC
 - `GEOSEARCH key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [WITHCOORDS] [WITHDISTANCES] [WITHHASHES] [WITHGEODIST] [STORE key] [STOREDIST key] [STOREHASH key] [STOREUNIT m|km|ft|mi]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
 - `GEOSEARCHSTORE key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count] [WITHCOORD] [WITHDIST] [WITHHASH] [WITHCOORDS] [WITHDISTANCES] [WITHHASHES] [WITHGEODIST] [STORE key] [STOREDIST key] [STOREHASH key] [STOREUNIT m|km|ft|mi]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a point.
 - `GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]` - Query a sorted set representing a geospatial index to fetch members matching a given maximum distance from a member.
+
+
+## Luan in Redis
+
+### Run script in CLI
+````shell
+HSET hash-key field1 "Hello" field2 "World"
+EVAL "return redis.call('HGET', KEYS[1], ARGV[1])" 1 hash-key field1
+> "Hello"
+EVAL "return redis.call('HGET', KEYS[1], ARGV[1])" 1 hash-key field2
+> "World"
+````
+
+- `EVAL script numkeys key [key...] arg [arg...]` - Execute a Lua script server side. The script runs inside the Redis server and it is isolated from the outer world (no disk access, no system calls, can’t interact with Redis clients). All the Redis commands must be called inside the script. It returns a single value: the return value of the script, as a Redis string (see next section for more information). The script does not need to return a string, but could also return a status reply, an integer, or simply nothing.
+
+### Managing EVAL scripts
+
+load script in redis server
+
+- `SCRIPT LOAD script` # load LUA script into server and provide hash
+- `EVALSHA sha1 numkeys key [key...] arg [arg...]` # run loaded script via sha1 hash
+- `SCRIPT EXISTS sha1 [sha1...]` # check for existing script
+- `SCRIPT FLUSH` # remove all scripts
+- `SCRIPT KILL` # terminate LUA script 
+- `SCRIPT DEBUG YES|SYNC|NO` # newer using in prod 
+
+````shell
+redis-cli> script load "local val=redis.call('GET', KEYS[1]) return val"
+redis-cli> '2aae6c35c94fcfb415dbe95f408b9ce91ee846ed' # generated hash for script
+redis-cli> evalsha '2aae6c35c94fcfb415dbe95f408b9ce91ee846ed' 1 key-name
+redis-cli> "42" # returns result value
+````
+
+### Use Cases
+- Limited Counters
+- - Count by period 
+- - \Adjust counter
+- - Allow request if threshold not exceeded 
+
+# TODO: Write script
+# Step1: create script to save data and load in server
+# Step2: create script to get data from server and load into server
+# Step3: check logic for float numbers!
