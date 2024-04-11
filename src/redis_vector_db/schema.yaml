@@ -1,0 +1,18 @@
+version: '0.1.0'
+
+index:
+    name: vector_idx
+    prefix: doc
+
+fields:
+    - name: content
+      type: text
+    - name: genre
+      type: tag
+    - name: embedding
+      type: vector
+      attrs:
+        algorithm: HNSW
+        dims: 384
+        distance_metric: l2
+        datatype: float32
