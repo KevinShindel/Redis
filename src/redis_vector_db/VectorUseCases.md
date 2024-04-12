@@ -253,9 +253,200 @@ And the following one to use the JSON data structure:
 
 ## LLM (Large Language Models)
 
+<details>
+  <summary>Click to show</summary>
+
 > Redis, the Vector Database for conversational AI use cases
  
 > Redis, as a high-performance, in-memory data platform, can play a pivotal role in addressing the challenges of LLM-based use cases. Here's how:
 > - **Context Retrieval** for RAG. Pairing Redis Enterprise with LLMs enables these models to access external contextual knowledge. This contextual knowledge is crucial for providing accurate and context-aware responses, preventing the model from generating incorrect or 'hallucinated' answers. By storing and indexing vectors that model unstructured data, Redis Enterprise ensures that the LLM can retrieve relevant information quickly and effectively, enhancing its response quality.
 > - **LLM Conversation Memory**. Redis Enterprise allows the persistence of all conversation history (memories) as embeddings in a vector database to improve model quality and personalization. When a conversational agent interacts with the LLM, it can check for relevant memories to aid or personalize the LLM's behavior. This feature enables seamless topic transitions during conversations and reduces misunderstandings.
 > - **Semantic Caching**. LLM completions can be computationally expensive. Redis Enterprise helps reduce the overall costs of ML-powered applications by caching input prompts and evaluating cache hits based on semantic similarity using vector search. This caching mechanism ensures that frequently requested information is readily available, optimizing response times and resource utilization.
+
+> Fine-tuning and Retrieval Augmented Generation (RAG)
+> - **Fine-tuning**. Fine-tuning is a process that involves training a pre-trained LLM on a specific dataset to adapt it to a particular task or domain. Fine-tuning is crucial for improving the performance of LLMs in specialized tasks, such as question-answering, summarization, or conversational agents. By leveraging Redis Enterprise as a vector database, you can store and index the embeddings of the fine-tuned LLMs, enabling efficient retrieval and utilization of these models in real-time applications.
+> - **Retrieval Augmented Generation (RAG)**. RAG is a framework that combines the strengths of LLMs and vector search to enhance the generation of responses in conversational AI systems. By using Redis Enterprise to store and index the embeddings of the LLMs and the retrieved documents, you can implement RAG efficiently. This approach allows the LLM to access external knowledge sources through vector search, improving the quality and relevance of the generated responses.
+
+```text
+RAG, presented by Meta in 2020, allows LLMs to incorporate external knowledge sources through retrieval mechanisms,
+    extending the model capabilities with the latest information.
+This method enables language models to perform similarly to humans, 
+    with little information collected from the environment and in real-time.
+RAG has been demonstrated to be very effective. However, it requires careful prompt engineering,
+    management of fresh knowledge, and the orchestration of different components.
+The following picture summarizes the flow when a user interacts with a chatbot assistant by asking a question.
+```
+<img style="background-color: white; padding: 20px" alt="RAG" src="https://university.redis.com/assets/courseware/v1/7acd2d2bd42400afcf61ea080f55e901/asset-v1:redislabs+RU402+2023_11+type@asset+block/ru402_5_3_1_conversational_ai_rag.png" />
+
+> We can simplify the architecture by considering the following three phases:
+> 1. **Preparation**. The knowledge we want to make available to increase the expertise of our LLM assistant is collected, transformed, ingested, and indexed. This requires a specific data preprocessing pipeline, with connectors to the data source and downstream connectors to the target database. In the implementation we will explore in this article, Redis is the chosen Vector Database. The data can be represented by articles, documents, books, and any textual source to specialize our chat. Of the many indexing strategies available, vector databases have been demonstrated to be effective at indexing and searching unstructured data stored in vectorial format.
+> 2. **Retrieval**. In this phase, the information (or context) relevant to the user's question is retrieved. Database semantic search assists in this task: the question is converted to a vector embedding, and vector search is performed to retrieve the relevant results from the database. vector search can be configured and performed with hybrid or range search strategies to determine what results best describe the question and can likely contain an answer. The assumption is that the question and the answer will be semantically similar.
+> 3. **Generation**. Time of prompt engineering: with the relevant context and the question in our hands, we proceed to create a prompt and instruct the LLM to elaborate and return a response. Composing the right prompt to leverage the provided context (and eventually the previous historical interactions in the chat) is crucial to getting a relevant answer to the question and guardrail the output.
+
+###  LLM conversation memory
+
+<img style="background-color: white; padding: 20px" alt="LLM" src="https://university.redis.com/assets/courseware/v1/4e4b3a4b38630fad8de1a57479c3c683/asset-v1:redislabs+RU402+2023_11+type@asset+block/ru402_5_3_1_conversational_ai_relevant_context.png" />
+
+> The idea behind the LLM Conversation Memory is to improve the model quality and personalization through an adaptive memory.
+> - Persist all conversation history (memories) as embeddings in a vector database.
+> - A conversational agent checks for relevant memories to aid or personalize the LLM behavior.
+> - Allows users to change topics without misunderstandings seamlessly.
+
+### Semantic caching
+
+> Semantic caching is used with large user bases or commonly asked questions. As usual with caching, this use case is about improving the application's responsiveness and reducing costs when using LLM-as-a-service. Because LLM completions are expensive, it helps to reduce the overall costs of the ML-powered application.
+
+<img style="background-color: white; padding: 20px" alt="Semantic" src="https://university.redis.com/assets/courseware/v1/49b3faeb1b97b432e322236067b37b8c/asset-v1:redislabs+RU402+2023_11+type@asset+block/ru402_5_3_1_conversational_ai_semantic_cache.png" />
+
+> Otherwise, the LLM produces a new response, which is cached for future searches.
+> - Use vector database to cache input prompts
+> - Cache hits evaluated by semantic similarity
+> 
+> *Note that the RedisVL client library makes semantic caching available out-of-the-box.
+
+</details>
+
+## Setting up a RAG Chatbot
+
+<details>
+  <summary>Click to show</summary>
+
+> Prototyping an ML-powered chatbot is not an impossible mission. The many frameworks and libraries available, together with the simplicity of getting an API token from the chosen LLM service provider, can assist you in setting up a proof-of-concept in a few hours and lines of code. Sticking to the three phases mentioned earlier (preparation, generation, and retrieval), let's proceed to create a chatbot assistant, a movie expert you can consult to get recommendations from and ask for specific movies.
+
+
+### Preparation
+
+> Imagine a movie expert who may answer questions or recommend movies based on criteria (genre, your favorite cast, or rating). A smart, automated chatbot will be trained on a corpus of popular films, which, for this example, we have downloaded from Kaggle: the IMDB movies dataset, with more than 10,000 movies and plenty of relevant information.
+> An entry in the dataset stores the following information:
+
+```json
+{
+  "names": "The Super Mario Bros. Movie",
+  "date_x": "04/05/2023",
+  "score": 76.0,
+  "genre": "Animation, Adventure, Family, Fantasy, Comedy",
+  "overview": "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+  "crew": [
+    "Chris Pratt, Mario (voice)",
+    "Anya Taylor-Joy, Princess Peach (voice)",
+    "Charlie Day, Luigi (voice)",
+    "Jack Black, Bowser (voice)",
+    "Keegan-Michael Key, Toad (voice)",
+    "Seth Rogen, Donkey Kong (voice)",
+    "Fred Armisen, Cranky Kong (voice)",
+    "Kevin Michael Richardson, Kamek (voice)",
+    "Sebastian Maniscalco, Spike (voice)"
+  ],
+  "status": "Released",
+  "orig_lang": "English",
+  "budget_x": 100000000.0,
+  "revenue": 724459031.0,
+  "country": "AU"
+}
+```
+
+> A possible index definition could be:
+
+```redis
+FT.CREATE movie_idx ON JSON PREFIX 1 moviebot:movie: SCHEMA $.crew AS crew
+        TEXT $.overview AS overview TEXT $.genre AS genre TAG SEPARATOR ,
+        $.names AS names TAG SEPARATOR ,
+        $.overview_embedding AS embedding VECTOR HNSW 6 TYPE FLOAT32 DIM 384 DISTANCE_METRIC COSINE
+```
+
+> This definition enables searches on several fields. As an example, we can perform a full-text search:
+```redis
+FT.SEARCH movie_idx @overview:'While working underground' RETURN 1 names
+1) (integer) 1
+2) "moviebot:movie:2"
+3) 1) "names"
+   2) "The Super Mario Bros. Movie"
+```
+> Or retrieve a movie by exact title match:
+```redis
+FT.SEARCH movie_idx @names:{Interstellar} RETURN 1 overview
+1) (integer) 1
+2) "moviebot:movie:190"
+3) 1) "overview"
+   2) "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage."
+```
+> The final step to complete the preparation phase is deciding what will be indexed by the database; for that, we need to prepare the paragraph to be transformed by the embedding model. We can capture as much information as we want. In the following Python excerpt, we will extract one entry and format the string movie.
+
+```python
+result = conn.json().get(key, "$.names", "$.overview", "$.crew", "$.score", "$.genre")
+movie = f"movie title is: {result['$.names'][0]}\n"
+movie += f"movie genre is: {result['$.genre'][0]}\n"
+movie += f"movie crew is: {result['$.crew'][0]}\n"
+movie += f"movie score is: {result['$.score'][0]}\n"
+movie += f"movie overview is: {result['$.overview'][0]}\n"
+```
+> Now, we can transform this string to a vector using the chosen model and store the vector in the same JSON entry, so the vector is packed together with the original entry in a compact object.
+
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+embedding = model.encode(movie).astype(np.float32).tolist()
+conn.json().set(key, "$.overview_embedding", embedding)
+```
+
+Repeating the operation for all the movies in the dataset completes the preparation phase.
+
+### Retrieval
+
+In this phase, we deal with the question from the user. 
+
+```python
+
+context = ""
+q = Query("@embedding:[VECTOR_RANGE $radius $vec]=>{$YIELD_DISTANCE_AS: score}") \
+    .sort_by("score", asc=True) \
+    .return_fields("overview", "names", "score", "$.crew", "$.genre", "$.score") \
+    .paging(0, 3) \
+    .dialect(2)
+
+# Find all vectors within VSS_MINIMUM_SCORE of the query vector
+query_params = {
+    "radius": VSS_MINIMUM_SCORE,
+    "vec": model.encode(query).astype(np.float32).tobytes()
+}
+
+res = conn.ft("movie_idx").search(q, query_params)
+
+if (res is not None) and len(res.docs):
+    it = iter(res.docs[0:])
+    for x in it:
+        movie = f"movie title is: {x['names']}\n"
+        movie += f"movie genre is: {x['$.genre']}\n"
+        movie += f"movie crew is: {x['$.crew']}\n"
+        movie += f"movie score is: {x['$.score']}\n"
+        movie += f"movie overview is: {x['overview']}\n"
+        context += movie + "\n"
+```
+## Activity 
+
+Ensure that you have database host, port, username and password for your Redis Cloud database at hand
+(alternatively, a Redis Stack instance is running). Complete the configuration of the environment by setting the
+environment variable that configures your Redis instance (default is localhost on port 6379) 
+and your OpenAI token: the chatbot leverages the OpenAI ChatGPT ChatCompletion API.
+
+1. Connect to the database using RedisInsight or redis-cli and flush the database with FLUSHALL.
+2. Configure the environment variable to connect export REDIS_URL=redis://user:password@host:port
+3. Configure the OpenAI token using the environment variable: export OPENAI_API_KEY="your-openai-token"
+
+Now, you can start the notebook and execute all the cells.
+```bash
+jupyter notebook moviebot.ipynb
+```
+
+> The execution of the notebook will open an input field. Type your question (e.g., Recommend three science fiction movies) and check the result!
+
+## More Use Cases
+
+> - **Fraud detection**. Vector search can be used to classify user behaviors when these are properly modeled as vectors, so we can deduce if user interactions resemble previously known fraud attempts
+> - **Personalization** of product description. Based on semantic matching, the user will read a product description that highlights aspects of the product matching user preferences
+> - **User segmentation**. Semantic matching enables the creation of categories of users to boost the relevance of recommendations
+> - **Contact center analytics**. Vector search helps retrieve historical tickets to assist with incoming tickets. When paired with speech-to-text, this is especially useful to store phone conversations as text and have them indexed by Redis.
+> - **Customer support**. Semantic search can significantly reduce the flow of new tickets if the customer, based on the problem description, gets a relevant document that solves the problem
+
+</details>

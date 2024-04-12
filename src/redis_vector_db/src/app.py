@@ -6,8 +6,9 @@ import os
 if __name__ == '__main__':
 
     # initialize the index and connect to Redis
-    index = SearchIndex.from_yaml("schema.yaml")
-    index.connect(os.environ.get('REDIS_URL', "redis://localhost:6379"))
+    index = SearchIndex.from_yaml("../schema.yaml")
+    HOST = os.environ.get('REDIS_URL', "redis://172.17.0.2:6379")
+    index.connect(HOST)
 
     # initialize the embedder
     hf = HFTextVectorizer(model="sentence-transformers/all-MiniLM-L6-v2")
