@@ -12,4 +12,17 @@ def get_redis_connection():
         socket_connect_timeout=REDIS_SOCKET_CONNECT_TIMEOUT,
         socket_keepalive=REDIS_SOCKET_KEEPALIVE,
         ssl=REDIS_SSL,
+        decode_responses=True,
+        encoding='utf-8',
     )
+
+
+def test_get_redis_connection():
+    conn = get_redis_connection()
+    print(conn.ping())
+    assert conn is not None
+    conn.close()
+
+
+if __name__ == '__main__':
+    test_get_redis_connection()

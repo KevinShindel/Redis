@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     # initialize the index and connect to Redis
     index = SearchIndex.from_yaml("schema.yaml")
-    index.connect(REDIS_HOST, db=REDIS_DB, password=REDIS_PASSWORD, port=REDIS_PORT, decode_responses=True)
+    index.connect(REDIS_URL, db=REDIS_DB, password=REDIS_PASSWORD, port=REDIS_PORT, decode_responses=True)
 
     # initialize the embedder
     hf = HFTextVectorizer(model="sentence-transformers/all-MiniLM-L6-v2")

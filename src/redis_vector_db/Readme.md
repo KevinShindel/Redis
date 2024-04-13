@@ -8,11 +8,20 @@
 
 To take this course successfully, you will need:
 
+- Redis Stack installed on your local machine or a cloud instance.
+  - [Redis Enterprise Cloud](https://redislabs.com/try-free/) (free tier available).
+  - [Docker](https://www.docker.com/products/docker-desktop) installed on your local machine.
 - [Python 3.7](https://www.python.org/downloads/) or higher
 - A [Redis](https://app.redislabs.com/) Cloud database or a local installation (to get a free Redis Cloud instance, jump to the instructions).
 - The course sample data loaded into your Redis Stack instance.
-- 
+
 > Throughout the course, we've provided example code written in Python, JavaScript (Node.js), Java and C#. You don't need to run the code to be successful on this course, and the exam does not contain programming language specific questions. If you'd like to try running some or all of the code samples then you'll also need to install:
+
+Run Docker Image
+
+```shell
+docker run -p 6379:6379 --name stack-redis -d redis/redis-stack-server:latest
+```
 
 - [Node.js](https://nodejs.org/) (version 14.8 or higher).
 - [Java JDK](https://sdkman.io/) (Java 11 or higher).

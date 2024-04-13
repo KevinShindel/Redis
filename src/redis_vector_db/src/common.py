@@ -1,10 +1,8 @@
 from os import getenv
-from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv())
-
-REDIS_USER = getenv("REDIS_USER", "redis")
-REDIS_PASSWORD = getenv("REDIS_PASSWORD", "redis")
+REDIS_USER = getenv("REDIS_USER", "")
+REDIS_PASSWORD = getenv("REDIS_PASSWORD", "")
+REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
 REDIS_HOST = getenv("REDIS_HOST", "localhost")
 REDIS_PORT = getenv("REDIS_PORT", 6379)
 REDIS_DB = getenv("REDIS_DB", 0)
