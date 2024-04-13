@@ -1,3 +1,26 @@
+"""
+Date: 2024-13-03
+Author: Kevin Shindel
+Module: cosine_distance.py
+
+This module is responsible for calculating the cosine similarity between sentence embeddings.
+It uses the SentenceTransformer model from the sentence-transformers library to convert sentences into vector embeddings.
+
+The main logic of the module is as follows:
+
+1. Define the SentenceTransformer model to use.
+2. Define a set of sentences and a query sentence.
+3. Convert the sentences and the query sentence into vector embeddings using the SentenceTransformer model.
+4. Define a function to calculate the cosine similarity between two vectors.
+5. Calculate the cosine similarity between the query vector and each sentence vector.
+6. Define a function to find the sentence that has the maximum similarity to the query sentence.
+7. Find the sentence with the maximum similarity to the query sentence.
+
+This module is part of a larger project that uses Redis Stack for semantic search and vector similarity.
+It is used in the context of understanding and implementing vector similarity for semantic search.
+"""
+
+
 import numpy as np
 from numpy.linalg import norm
 from sentence_transformers import SentenceTransformer
