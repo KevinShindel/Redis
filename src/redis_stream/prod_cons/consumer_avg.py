@@ -20,7 +20,7 @@ def get_rolling_mean(results):
     sorted_temp = sorted(top_10_temp)
     if len(sorted_temp) % 2 == 0:
         middle = int(len(sorted_temp) / 2)
-        m_1, m_2 = sorted_temp[middle-1:middle+1]
+        m_1, m_2 = sorted_temp[middle - 1:middle + 1]
         mean = (m_1 + m_2) / 2
     else:
         middle = int((len(sorted_temp) - 1) / 2)

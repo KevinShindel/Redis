@@ -1,4 +1,4 @@
-from config.common import DEFAULT_DAO_KEY_PREFIX
+from src.config.common import DEFAULT_DAO_KEY_PREFIX
 
 
 def prefixed_key(f):

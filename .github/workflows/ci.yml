@@ -44,4 +44,4 @@ jobs:
 
       # 6. Run flake8 (syntax / style check)
       - name: Run flake8
-        run: flake8 . --max-line-length=120 --exclude=*.pyc,.venv
+        run: flake8 .

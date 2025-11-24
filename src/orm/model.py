@@ -18,5 +18,3 @@ class User(JsonModel):
     address: Address
     skills: Optional[List[str]] = Field(index=False)
     age: PositiveInt = Field(index=False)
-
-

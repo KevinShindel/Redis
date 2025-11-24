@@ -2,7 +2,7 @@ import json
 import random
 import time
 
-from dao.core.dao_redis import RedisDaoBase
+from src.dao.core.dao_redis import RedisDaoBase
 
 
 class RedisPublisher(RedisDaoBase):

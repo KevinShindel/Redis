@@ -21,7 +21,7 @@
   {
       "author": "Martha Wells",
       "id": "43",
-      "description": "My risk-assessment module predicts a 53 percent chance of a human-on-human massacre before the end of the contract." A short story published in Wired.com magazine on December 17, 2018.",
+      "description": "My risk-assessment module predicts a 53 percent chance of a human-on-human massacre before the end of the contract. A short story published in Wired.com magazine on December 17, 2018.",
       "editions": [
         "english"
       ],

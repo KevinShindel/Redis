@@ -1,7 +1,7 @@
 import csv
-import re
 import os
 import random
+import re
 from datetime import datetime, timedelta, timezone
 
 AUTHOR_HMSET_COMMAND = 'HMSET {key} name "{name}" author_id "{author_id}"'

@@ -4,7 +4,8 @@ Author: Kevin Shindel
 Module: cosine_distance.py
 
 This module is responsible for calculating the cosine similarity between sentence embeddings.
-It uses the SentenceTransformer model from the sentence-transformers library to convert sentences into vector embeddings.
+It uses the SentenceTransformer model from the sentence-transformers library to convert sentences into
+vector embeddings.
 
 The main logic of the module is as follows:
 
@@ -43,11 +44,9 @@ if __name__ == '__main__':
     # query vector embedding
     query_embedding = model.encode(sentence)
 
-
     def cosine_similarity(a, b):
         """  define our distance metric """
         return np.dot(a, b) / (norm(a) * norm(b))
-
 
     # run semantic similarity search
     print("Query: That is a happy person")

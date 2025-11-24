@@ -1,6 +1,6 @@
-from dao.core.dao_redis import RedisDaoBase
-from dao.dao.dao_base import UserDaoBase
-from dao.model.model import UserModel
+from src.dao.core.dao_redis import RedisDaoBase
+from src.dao.dao.dao_base import UserDaoBase
+from src.dao.model.model import UserModel
 
 
 class UserDaoRedis(UserDaoBase, RedisDaoBase):
@@ -20,7 +20,7 @@ class UserDaoRedis(UserDaoBase, RedisDaoBase):
         user_ids_key = self.key_schema.user_ids_key()
         return bool(client.srem(user_ids_key, user_id))
 
-    def get(self,  user_id: int, *args, **kwargs):
+    def get(self, user_id: int, *args, **kwargs):
         hash_key = self.key_schema.user_hash_key(user_id=user_id)
         client = kwargs.get('pipeline', self.redis)
         instance = client.hgetall(name=hash_key)

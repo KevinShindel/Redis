@@ -1,6 +1,8 @@
 import csv
-from adoptable import Adoptable
+
 from redis_om import Migrator
+
+from adoptable import Adoptable
 
 
 def load():
@@ -21,13 +23,17 @@ def load():
 
 
 def search_animals():
-    data = Adoptable.find(
-        (Adoptable.name == 'Charlic')
-        & (Adoptable.age > 9)
-        & (Adoptable.children is True)
-        & (Adoptable.description % 'play')
-        & ~(Adoptable.description % 'anxious')
-    ).sort_by('age')
+    data = (
+        Adoptable.find(
+            (Adoptable.name == "Charlic")
+            & (Adoptable.age > 9)
+            & (Adoptable.children.is_(True))
+            & (Adoptable.description % "play")
+            & ~(Adoptable.description % "anxious")
+        )
+        .sort_by("age")
+    )
+    return data
 
 
 if __name__ == '__main__':

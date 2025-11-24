@@ -3,7 +3,8 @@ Module: generate_text_embeddings.py
 Author: Kevin Shindel
 Date: 2024-13-04
 
-This module is responsible for generating text embeddings using the SentenceTransformer model from the sentence-transformers library.
+This module is responsible for generating text embeddings using the SentenceTransformer model from
+ the sentence-transformers library.
 
 The main logic of the module is as follows:
 

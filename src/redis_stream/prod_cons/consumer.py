@@ -30,7 +30,11 @@ def main():
         print("Group already exists.")
 
     while True:
-        results = redis.xreadgroup(groupname=group_name, consumername=consumer_name, streams=stream_offsets, count=None, block=block_ms)
+        results = redis.xreadgroup(groupname=group_name,
+                                   consumername=consumer_name,
+                                   streams=stream_offsets,
+                                   count=None,
+                                   block=block_ms)
         write_to_data_warehouse(results)
         time.sleep(1)
 

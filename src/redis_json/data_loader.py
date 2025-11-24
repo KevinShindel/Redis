@@ -5,9 +5,10 @@ import argparse
 import io
 import json
 import os
+
 import redis
 from redis.commands.search.field import TagField, NumericField, TextField
-from redis.commands.search.indexDefinition import IndexDefinition, IndexType
+from redis.commands.search.index_definition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 
 DATASET_SIZE = 1486  # Number of books we expect to load.
@@ -35,7 +36,7 @@ for k in r.scan_iter(match=make_key("*")):
 print("Dropping any existing search index.")
 try:
     r.ft(INDEX_NAME).dropindex(delete_documents=False)
-except:
+except Exception:
     # Dropping an index that doesn't exist throws an exception so
     # let's assume that happened and that this is OK!
     pass

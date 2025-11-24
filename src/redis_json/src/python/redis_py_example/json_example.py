@@ -1,38 +1,39 @@
 import os
+
 import redis
 
 BOOK_KEY = "ru204:book:99999"
 
 BOOK = {
-  "author": "Redis University",
-  "id": 99999,
-  "description": "This is a fictional book used to demonstrate RedisJSON!",
-  "editions": [
-    "english",
-    "french"
-  ],
-  "genres": [
-    "education",
-    "technology"
-  ],
-  "inventory": [
-    {
-      "status": "available",
-      "stock_id": "99999_1"
+    "author": "Redis University",
+    "id": 99999,
+    "description": "This is a fictional book used to demonstrate RedisJSON!",
+    "editions": [
+        "english",
+        "french"
+    ],
+    "genres": [
+        "education",
+        "technology"
+    ],
+    "inventory": [
+        {
+            "status": "available",
+            "stock_id": "99999_1"
+        },
+        {
+            "status": "on_loan",
+            "stock_id": "99999_2"
+        }
+    ],
+    "metrics": {
+        "rating_votes": 12,
+        "score": 2.3
     },
-    {
-      "status": "on_loan",
-      "stock_id": "99999_2"
-    }
-  ],
-  "metrics": {
-    "rating_votes": 12,
-    "score": 2.3
-  },
-  "pages": 1000,
-  "title": "Up and Running with RedisJSON",
-  "url": "https://university.redis.com/courses/ru204/",
-  "year_published": 2022
+    "pages": 1000,
+    "title": "Up and Running with RedisJSON",
+    "url": "https://university.redis.com/courses/ru204/",
+    "year_published": 2022
 }
 
 # Create a connection to Redis and connect to the server.
@@ -68,7 +69,7 @@ print(f"rating_votes incremented to {response[0]}")
 # Add another copy of the book to the inventory.
 # Response will be: [3] (new size of the inventory array)
 response = r.json().arrappend(BOOK_KEY, "$.inventory", {
-  "status": "available",
-  "stock_id": "99999_3"
+    "status": "available",
+    "stock_id": "99999_3"
 })
 print(f"There are now {response[0]} copies of the book in the inventory.")

@@ -1,7 +1,8 @@
 from redisvl.index import SearchIndex
 from redisvl.query import VectorQuery
 from redisvl.utils.vectorize.text.huggingface import HFTextVectorizer
-from common import *
+
+from src.redis_vector_db.src.common import REDIS_URL, REDIS_DB, REDIS_PASSWORD, REDIS_PORT
 
 if __name__ == '__main__':
 

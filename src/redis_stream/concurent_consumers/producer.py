@@ -3,7 +3,6 @@ from time import sleep
 
 from src.config.client import get_redis_connection
 
-
 MEMBER_CNT = 3
 
 STREAM_NAME = 'test_data'
@@ -12,10 +11,7 @@ redis = get_redis_connection()
 
 
 def setup():
-    global redis
-    # redis = get_redis_connection()
     if not redis.exists(STREAM_NAME):
-        # redis.delete(STREAM_NAME)
         redis.xgroup_create(STREAM_NAME, GROUP, mkstream=True)
 
 

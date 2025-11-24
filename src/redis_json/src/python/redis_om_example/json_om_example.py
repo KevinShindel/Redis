@@ -1,6 +1,7 @@
-from redis_om import (JsonModel, EmbeddedJsonModel)
-from pydantic import (PositiveInt, PositiveFloat, AnyHttpUrl)
 from typing import List
+
+from pydantic import (PositiveInt, PositiveFloat, AnyHttpUrl)
+from redis_om import (JsonModel, EmbeddedJsonModel)
 
 
 # This class models the embedded "metrics" object.
@@ -33,6 +34,7 @@ class Book(JsonModel):
     class Meta:
         global_key_prefix = "ru204:redis-om-python"
         model_key_prefix = "book"
+
 
 def main():
 
@@ -79,8 +81,6 @@ def main():
     a_book.save()
     print("Updated author and saved to Redis:")
     print(Book.get(a_book.pk))
-
-
 
 
 if __name__ == '__main__':

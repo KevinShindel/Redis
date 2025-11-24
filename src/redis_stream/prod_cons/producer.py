@@ -6,6 +6,7 @@ from src.config.client import get_redis_connection
 
 idx = 0
 
+
 class Measurement:
 
     def __init__(self):

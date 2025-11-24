@@ -2,7 +2,7 @@ import json
 
 from redis.client import PubSub
 
-from dao.core.dao_redis import RedisDaoBase
+from src.dao.core.dao_redis import RedisDaoBase
 
 
 class RedisSubscriber(RedisDaoBase):

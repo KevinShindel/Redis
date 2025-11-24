@@ -1,7 +1,7 @@
 from redis import Redis
 
-from config.client import get_redis_connection
-from dao.shema.schema import KeySchema
+from src.config.client import get_redis_connection
+from src.dao.shema.schema import KeySchema
 
 
 class RedisDaoBase:

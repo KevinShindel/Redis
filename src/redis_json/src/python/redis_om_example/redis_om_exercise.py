@@ -1,6 +1,7 @@
-from redis_om import JsonModel, EmbeddedJsonModel
-from pydantic import PositiveInt
 from typing import List
+
+from pydantic import PositiveInt
+from redis_om import JsonModel, EmbeddedJsonModel
 
 # TODO: Create JSON Model and save data
 data = {
@@ -12,7 +13,8 @@ data = {
         "Laurence Fishburne",
         "Carrie-Ann Moss"
     ],
-    "summary": "A stranger leads computer hacker Neo to a forbidding underworld, he discovers the truth: the life he knows is the elaborate deception of an evil cyber-intelligence."
+    "summary": "A stranger leads computer hacker Neo to a forbidding underworld,"
+               " he discovers the truth: the life he knows is the elaborate deception of an evil cyber-intelligence."
 }
 
 
