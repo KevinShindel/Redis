@@ -1,7 +1,7 @@
 from typing import List
 
-from pydantic import (PositiveInt, PositiveFloat, AnyHttpUrl)
-from redis_om import (JsonModel, EmbeddedJsonModel)
+from pydantic import AnyHttpUrl, PositiveFloat, PositiveInt
+from redis_om import EmbeddedJsonModel, JsonModel
 
 
 # This class models the embedded "metrics" object.
@@ -45,23 +45,14 @@ def main():
         description="This is a book all about Redis.",
         genres=["redis", "tech", "computers"],
         inventory=[
-            InventoryItem(
-                status="on_loan",
-                stock_id="999_1"
-            ),
-            InventoryItem(
-                status="maintenance",
-                stock_id="999_2"
-            )
+            InventoryItem(status="on_loan", stock_id="999_1"),
+            InventoryItem(status="maintenance", stock_id="999_2"),
         ],
-        metrics=Metrics(
-            rating_votes=4000,
-            score=4.5
-        ),
+        metrics=Metrics(rating_votes=4000, score=4.5),
         pages=1000,
         title="Redis for Beginners",
         url="https://university.redis.com/courses/ru204/",
-        year_published=2022
+        year_published=2022,
     )
 
     # Get the locally generated ULID for this book.
@@ -83,5 +74,5 @@ def main():
     print(Book.get(a_book.pk))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

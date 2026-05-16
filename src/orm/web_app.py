@@ -28,5 +28,5 @@ def delete_user(pk: int):
     return f"User {user.username} deleted.", 204
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

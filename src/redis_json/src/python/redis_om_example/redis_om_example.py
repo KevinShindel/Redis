@@ -1,20 +1,19 @@
 import csv
 
-from redis_om import Migrator
-
 from adoptable import Adoptable
+from redis_om import Migrator
 
 
 def load():
     # open csv file
     # TODO: provide data for load func
-    with open(file='animals.csv', mode='r') as handler:
+    with open(file="animals.csv", mode="r") as handler:
         # create csv reader
         reader = csv.DictReader(handler)
         for animal in reader:
             # create Adoptable instance
             adoptable = Adoptable(**animal)
-            print(f'[+] Adoptable: {adoptable.name} loaded..')
+            print(f"[+] Adoptable: {adoptable.name} loaded..")
             # save model
             adoptable.save()
 
@@ -23,18 +22,15 @@ def load():
 
 
 def search_animals():
-    data = (
-        Adoptable.find(
-            (Adoptable.name == "Charlic")
-            & (Adoptable.age > 9)
-            & (Adoptable.children.is_(True))
-            & (Adoptable.description % "play")
-            & ~(Adoptable.description % "anxious")
-        )
-        .sort_by("age")
-    )
+    data = Adoptable.find(
+        (Adoptable.name == "Charlic")
+        & (Adoptable.age > 9)
+        & (Adoptable.children.is_(True))
+        & (Adoptable.description % "play")
+        & ~(Adoptable.description % "anxious")
+    ).sort_by("age")
     return data
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     load()
