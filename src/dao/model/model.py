@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 
 from pydantic import PositiveInt
 
@@ -13,9 +13,9 @@ class Address:
 @dataclass(frozen=True, eq=True)
 class UserModel:
     id: int = field(default=None)
-    username: str = field(default='username')
-    first_name: str = field(default='John')
-    last_name: str = field(default='Doe')
+    username: str = field(default="username")
+    first_name: str = field(default="John")
+    last_name: str = field(default="Doe")
     # address: typing.Optional[Address] = field(default_factory={})
 
     def dump(self):

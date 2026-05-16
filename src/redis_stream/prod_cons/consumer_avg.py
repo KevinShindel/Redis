@@ -20,7 +20,7 @@ def get_rolling_mean(results):
     sorted_temp = sorted(top_10_temp)
     if len(sorted_temp) % 2 == 0:
         middle = int(len(sorted_temp) / 2)
-        m_1, m_2 = sorted_temp[middle - 1:middle + 1]
+        m_1, m_2 = sorted_temp[middle - 1 : middle + 1]
         mean = (m_1 + m_2) / 2
     else:
         middle = int((len(sorted_temp) - 1) / 2)
@@ -53,11 +53,12 @@ def main():
         print("Group already exists.")
 
     while True:
-        results = redis.xreadgroup(group_name, consumer_name,
-                                   stream_offsets, None, block_ms)
+        results = redis.xreadgroup(
+            group_name, consumer_name, stream_offsets, None, block_ms
+        )
         write_to_data_warehouse(results)
         time.sleep(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

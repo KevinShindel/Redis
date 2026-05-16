@@ -7,7 +7,7 @@ import json
 import os
 
 import redis
-from redis.commands.search.field import TagField, NumericField, TextField
+from redis.commands.search.field import NumericField, TagField, TextField
 from redis.commands.search.index_definition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 
@@ -21,9 +21,15 @@ def make_key(book_id):
 
 
 arg_parser = argparse.ArgumentParser(description="Load JSON data into Redis for RU204.")
-arg_parser.add_argument("--dir", dest="books_file", required=True, help="File containing JSON to load.")
-arg_parser.add_argument("--redis", default="redis://localhost:6379", dest="redis_url",
-                        help="Redis URL to connect to.")
+arg_parser.add_argument(
+    "--dir", dest="books_file", required=True, help="File containing JSON to load."
+)
+arg_parser.add_argument(
+    "--redis",
+    default="redis://localhost:6379",
+    dest="redis_url",
+    help="Redis URL to connect to.",
+)
 args = arg_parser.parse_args()
 
 print(f"Connecting to Redis at {args.redis_url}")
@@ -55,12 +61,11 @@ r.ft(INDEX_NAME).create_index(
         NumericField("$.metrics.rating_votes", as_name="rating_votes", sortable=True),
         NumericField("$.metrics.score", as_name="score", sortable=True),
         TagField("$.inventory[*].status", as_name="status"),
-        TagField("$.inventory[*].stock_id", as_name="stock_id")
+        TagField("$.inventory[*].stock_id", as_name="stock_id"),
     ],
     definition=IndexDefinition(
-        index_type=IndexType.JSON,
-        prefix=[f"{REDIS_KEY_BASE}:"]
-    )
+        index_type=IndexType.JSON, prefix=[f"{REDIS_KEY_BASE}:"]
+    ),
 )
 
 books_loaded = 0
@@ -100,17 +105,26 @@ try:
     # Find books with "Brave New World" in the title that don't have
     # "Revisited" in the title, should return just book 31784.
     # ft.search idx:books @title:"Brave New World -Revisited"
-    results = r.ft(INDEX_NAME).search(Query("Brave New World -Revisited").limit_fields("title").return_field("id"))
+    results = r.ft(INDEX_NAME).search(
+        Query("Brave New World -Revisited").limit_fields("title").return_field("id")
+    )
     assert 1 == len(results.docs), "Error searching for book 31784."
-    assert make_key("31784") == results.docs[0].id, "Wrong book returned when searching for 31784."
+    assert (
+        make_key("31784") == results.docs[0].id
+    ), "Wrong book returned when searching for 31784."
 
     # Find all books by author containing "Vonnegut" published in the 1980s
     # that have a score between 3 and 5.  Should return just book 2906.
     # ft.search idx:books "@author:Vonnegut @score:[3 5] @year_published:[1980 1989]
     results = r.ft(INDEX_NAME).search(
-        Query("@author:Vonnegut @score:[3 5] @year_published:[1980 1989]").return_field("id"))
+        Query("@author:Vonnegut @score:[3 5] @year_published:[1980 1989]").return_field(
+            "id"
+        )
+    )
     assert 1 == len(results.docs), "Error searching for book 2906."
-    assert make_key("2906") == results.docs[0].id, "Wrong book returned when searching for 2906."
+    assert (
+        make_key("2906") == results.docs[0].id
+    ), "Wrong book returned when searching for 2906."
 except AssertionError as e:
     print("Data verification checks failed:")
     print(e)

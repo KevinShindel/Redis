@@ -9,6 +9,6 @@ class TestRedisPublisher(unittest.TestCase):
         self.publisher = RedisPublisher()
 
     def test_publish_message(self):
-        message = {'field': 'data'}
+        message = {"field": "data"}
         response = self.publisher.publish(message=message)
         self.assertFalse(response)

@@ -1,13 +1,10 @@
 from redis import Redis
 
-from src.redis_vector_db.src.common import (REDIS_SSL,
-                                            REDIS_SOCKET_TIMEOUT,
+from src.redis_vector_db.src.common import (REDIS_DB, REDIS_HOST,
+                                            REDIS_PASSWORD, REDIS_PORT,
                                             REDIS_SOCKET_CONNECT_TIMEOUT,
                                             REDIS_SOCKET_KEEPALIVE,
-                                            REDIS_HOST,
-                                            REDIS_PORT,
-                                            REDIS_DB,
-                                            REDIS_PASSWORD)
+                                            REDIS_SOCKET_TIMEOUT, REDIS_SSL)
 
 
 def get_redis_connection():
@@ -21,7 +18,7 @@ def get_redis_connection():
         socket_keepalive=REDIS_SOCKET_KEEPALIVE,
         ssl=REDIS_SSL,
         decode_responses=True,
-        encoding='utf-8',
+        encoding="utf-8",
     )
 
 
@@ -32,5 +29,5 @@ def test_get_redis_connection():
     conn.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_get_redis_connection()

@@ -4,7 +4,7 @@ from src.config.common import DEFAULT_DAO_KEY_PREFIX
 def prefixed_key(f):
     def prefixed_method(self, *args, **kwargs):
         key = f(self, *args, **kwargs)
-        return '%s:%s' % (self.prefix, key)
+        return "%s:%s" % (self.prefix, key)
 
     return prefixed_method
 
@@ -19,8 +19,8 @@ class UserKeySchema(KeySchema):
 
     @prefixed_key
     def user_hash_key(self, user_id):
-        return 'users:info:%s' % user_id
+        return "users:info:%s" % user_id
 
     @prefixed_key
     def user_ids_key(self):
-        return 'users:ids'
+        return "users:ids"

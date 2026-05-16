@@ -1,4 +1,4 @@
-from redis_om import HashModel, Field
+from redis_om import Field, HashModel
 
 
 class Adoptable(HashModel):

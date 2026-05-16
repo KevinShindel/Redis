@@ -24,7 +24,11 @@ class Measurement:
         global idx
         idx += 1
 
-        return {'idx': idx, 'postal_code': random.choice(self.postal_codes), 'temp_f': self.current_temp}
+        return {
+            "idx": idx,
+            "postal_code": random.choice(self.postal_codes),
+            "temp_f": self.current_temp,
+        }
 
 
 def main():
@@ -34,10 +38,10 @@ def main():
 
     while True:
         entry = measurement.get_next()
-        id = redis.xadd(name=stream_key, fields=entry, id='*')
+        id = redis.xadd(name=stream_key, fields=entry, id="*")
         print("Wrote " + json.dumps(entry) + " with ID " + id)
         time.sleep(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
