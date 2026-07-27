@@ -28,8 +28,13 @@ from redis.commands.search.index_definition import IndexDefinition
 from redis.commands.search.query import Query
 from sentence_transformers import SentenceTransformer
 
-from src.config.common import (REDIS_DB, REDIS_HOST, REDIS_PASSWORD,
-                               REDIS_PORT, REDIS_USERNAME)
+from src.config.common import (
+    REDIS_DB,
+    REDIS_HOST,
+    REDIS_PASSWORD,
+    REDIS_PORT,
+    REDIS_USERNAME,
+)
 
 if __name__ == "__main__":
     # Get a Redis connection

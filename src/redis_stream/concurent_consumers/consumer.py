@@ -2,11 +2,9 @@ import random
 import time
 from multiprocessing import Process
 from threading import Thread
-from typing import List, Tuple
 
 from src.config.client import get_redis_connection
-from src.redis_stream.concurent_consumers.producer import (GROUP, STREAM_NAME,
-                                                           setup)
+from src.redis_stream.concurent_consumers.producer import GROUP, STREAM_NAME, setup
 
 MEMBER_CNT = 3
 
@@ -65,7 +63,7 @@ def new_consumer(consumer_name: str):
     return consumer_name, consumer
 
 
-def chaos_func(consumers_list: List[Tuple[str, Process]]):
+def chaos_func(consumers_list: list[tuple[str, Process]]):
     while True:
         # Roll a pair of dice to determine the verdict
         if random.randint(2, 12) == 2:

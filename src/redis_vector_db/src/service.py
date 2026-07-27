@@ -1,10 +1,15 @@
 from redis import Redis
 
-from src.redis_vector_db.src.common import (REDIS_DB, REDIS_HOST,
-                                            REDIS_PASSWORD, REDIS_PORT,
-                                            REDIS_SOCKET_CONNECT_TIMEOUT,
-                                            REDIS_SOCKET_KEEPALIVE,
-                                            REDIS_SOCKET_TIMEOUT, REDIS_SSL)
+from src.redis_vector_db.src.common import (
+    REDIS_DB,
+    REDIS_HOST,
+    REDIS_PASSWORD,
+    REDIS_PORT,
+    REDIS_SOCKET_CONNECT_TIMEOUT,
+    REDIS_SOCKET_KEEPALIVE,
+    REDIS_SOCKET_TIMEOUT,
+    REDIS_SSL,
+)
 
 
 def get_redis_connection():

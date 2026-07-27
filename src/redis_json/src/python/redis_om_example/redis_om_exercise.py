@@ -1,4 +1,3 @@
-from typing import List
 
 from pydantic import PositiveInt
 from redis_om import EmbeddedJsonModel, JsonModel
@@ -23,7 +22,7 @@ class FilmModel(JsonModel):
     title = str
     released: PositiveInt
     runtime: PositiveInt
-    stars: List[ActorModel]  # separate model for actors
+    stars: list[ActorModel]  # separate model for actors
     summary: str
 
     class Meta:

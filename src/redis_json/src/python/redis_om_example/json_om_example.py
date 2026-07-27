@@ -1,4 +1,3 @@
-from typing import List
 
 from pydantic import AnyHttpUrl, PositiveFloat, PositiveInt
 from redis_om import EmbeddedJsonModel, JsonModel
@@ -21,8 +20,8 @@ class Book(JsonModel):
     author: str
     id: str
     description: str
-    genres: List[str]
-    inventory: List[InventoryItem]
+    genres: list[str]
+    inventory: list[InventoryItem]
     metrics: Metrics
     pages: PositiveInt
     title: str
