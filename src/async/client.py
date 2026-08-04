@@ -1,7 +1,12 @@
 from aioredis import Redis as AsyncRedis
 
-from src.config.common import (REDIS_DB, REDIS_HOST, REDIS_PASSWORD,
-                               REDIS_PORT, REDIS_USERNAME)
+from src.config.common import (
+    REDIS_DB,
+    REDIS_HOST,
+    REDIS_PASSWORD,
+    REDIS_PORT,
+    REDIS_USERNAME,
+)
 
 
 async def get_async_redis_connection():

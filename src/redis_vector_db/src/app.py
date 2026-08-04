@@ -2,8 +2,12 @@ from redisvl.index import SearchIndex
 from redisvl.query import VectorQuery
 from redisvl.utils.vectorize.text.huggingface import HFTextVectorizer
 
-from src.redis_vector_db.src.common import (REDIS_DB, REDIS_PASSWORD,
-                                            REDIS_PORT, REDIS_URL)
+from src.redis_vector_db.src.common import (
+    REDIS_DB,
+    REDIS_PASSWORD,
+    REDIS_PORT,
+    REDIS_URL,
+)
 
 if __name__ == "__main__":
 

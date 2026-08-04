@@ -1,7 +1,6 @@
 from redis import Redis
 
-from src.config.common import (REDIS_DB, REDIS_HOST, REDIS_PASSWORD,
-                               REDIS_USERNAME)
+from src.config.common import REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_USERNAME
 
 
 def get_cluster_redis_connection(

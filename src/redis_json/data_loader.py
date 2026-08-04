@@ -2,7 +2,6 @@
 # Data loader script.
 
 import argparse
-import io
 import json
 import os
 
@@ -72,7 +71,7 @@ books_loaded = 0
 print(f"Loading JSON files from {args.books_file}.")
 pipeline = r.pipeline()
 if os.path.isfile(args.books_file):
-    with io.open(args.books_file, encoding="utf-8") as book_file:
+    with open(args.books_file, encoding="utf-8") as book_file:
         for book in json.load(book_file):
             redis_key = make_key(book["id"])
             pipeline.json().set(redis_key, "$", book)

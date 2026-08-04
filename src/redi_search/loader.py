@@ -140,7 +140,7 @@ class DataGenerator:
     def generate_checkout_data(self):
         # Late checkouts
         checkout_length_days = 30
-        for user_id in range(0, 12):
+        for user_id in range(12):
             book_isbn = "9780393059168"  # Sherlock Holmes
             key = self.keys.checkout(user_id, book_isbn)
             checkout_date = JANUARY_1 - timedelta(days=35)
