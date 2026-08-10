@@ -1,4 +1,3 @@
-
 from pydantic import AnyHttpUrl, PositiveFloat, PositiveInt
 from redis_om import EmbeddedJsonModel, JsonModel
 
