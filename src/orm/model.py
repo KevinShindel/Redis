@@ -1,4 +1,3 @@
-
 from pydantic import PositiveInt
 from redis_om import EmbeddedJsonModel, Field, JsonModel
 
