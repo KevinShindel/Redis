@@ -2,7 +2,7 @@ import csv
 import os
 import random
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 AUTHOR_HMSET_COMMAND = 'HMSET {key} name "{name}" author_id "{author_id}"'
 USER_HMSET_COMMAND = 'HMSET {key} first_name "{first_name}" last_name "{last_name}" email "{email}" escaped_email "{escaped_email}" user_id "{user_id}" last_login "{last_login}"'
@@ -16,7 +16,7 @@ NEW_YORK = "-73.9{},40.7{}"
 
 PUNCTUATION = re.compile(r"([,.<>{}\[\]\"':;!@#$%^&*()-+=~])")
 JANUARY_1 = datetime(
-    year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc
+    year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=UTC
 )
 
 
