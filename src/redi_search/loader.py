@@ -15,9 +15,7 @@ PREFIX = "ru203"
 NEW_YORK = "-73.9{},40.7{}"
 
 PUNCTUATION = re.compile(r"([,.<>{}\[\]\"':;!@#$%^&*()-+=~])")
-JANUARY_1 = datetime(
-    year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=UTC
-)
+JANUARY_1 = datetime(year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=UTC)
 
 
 def escape_quotes(string):
